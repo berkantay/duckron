@@ -1,0 +1,4 @@
+path: "my_database.duckdb"
+interval: 10
+destinationPath: "backups"
+snapshotFormat: "parquet"
