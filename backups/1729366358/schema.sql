@@ -1,8 +1,0 @@
-
-
-
-CREATE TABLE t1(i INTEGER, j INTEGER);
-
-
-
-
