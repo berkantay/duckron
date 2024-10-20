@@ -14,8 +14,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println("Starting duckron with config:", config)
-
 	duckron, err := duckron.NewDuckron(config)
 	if err != nil {
 		log.Fatal(err)
