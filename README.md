@@ -64,7 +64,6 @@
       <li><a href="#contributing">Contributing</a></li>
       <li><a href="#license">License</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a href="#acknowledgments">Acknowledgments</a></li>
    </ol>
 </details>
 
@@ -99,9 +98,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Roadmap
 
-- [] Write retention policy manager
-- [] Write health manager
-- [] Implement webhooks
+- [ ] Write retention policy manager
+- [ ] Write health manager
+- [ ] Implement webhooks
 
 See the [open issues](https://https://github.com/berkantay/duckron/issues) for a full list of proposed features (and known issues).
 
