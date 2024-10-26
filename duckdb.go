@@ -25,11 +25,7 @@ func (client *DuckDBClient) Close() error {
 	return client.db.Close()
 }
 
-func (client *DuckDBClient) Query(query string, args ...interface{}) (*sql.Rows, error) {
-	return client.db.Query(query, args...)
-}
-
-func (client *DuckDBClient) Exec(query string, args ...interface{}) (sql.Result, error) {
+func (client *DuckDBClient) exec(query string, args ...interface{}) (sql.Result, error) {
 	return client.db.Exec(query, args...)
 }
 
@@ -39,7 +35,7 @@ func (client *DuckDBClient) Ping() error {
 
 func (client *DuckDBClient) Snapshot(format string, destination string) error {
 	query := buildSnapshotQuery(format, destination)
-	res, err := client.Exec(query)
+	res, err := client.exec(query)
 	if err != nil {
 		return err
 	}

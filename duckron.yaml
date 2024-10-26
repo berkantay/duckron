@@ -1,4 +1,10 @@
-path: "my_database.duckdb"
-interval: 10
-destinationPath: "backups"
-snapshotFormat: "parquet"
+database:
+  type: "duckdb"
+  path: "my_database.duckdb"
+  snapshot:
+    interval: 10
+    destination: "backups"
+    format: "parquet"
+  retention:
+    interval: 1
+    unit: "day"

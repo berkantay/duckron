@@ -1,52 +1,47 @@
 package duckron
 
-import (
-	"fmt"
-	"os"
-	"time"
+var (
+	// ErrSnapshotManagerFailed is returned when a snapshot manager fails to be created
+	ErrSnapshotManagerFailed = newError("snapshot", "failed to create snapshot manager")
 )
 
 type Duckron struct {
-	timer  *Timer
 	client *DuckDBClient
 	config *config
 }
 
+type Services struct {
+	snapshotManager *snapshotManager
+}
+
 func NewDuckron(config *config) (*Duckron, error) {
-	timer := NewTimer(config.Interval)
-	client, err := NewDuckDBClient(config.Path)
+	client, err := NewDuckDBClient(config.Database.Path)
 	if err != nil {
 		return nil, err
 	}
-	return &Duckron{timer: timer, client: client, config: config}, nil
+	return &Duckron{client: client, config: config}, nil
 }
 
-func (d *Duckron) RunSnapshotJob() error {
-	if err := createDirectoryIfNotExists(d.config.DestinationPath); err != nil {
-		return err
+func (d *Duckron) Start() *Error {
+	snapshotOptions := &snapshotOptions{
+		interval:    d.config.Database.Snapshot.Interval,
+		format:      d.config.Database.Snapshot.Format,
+		destination: d.config.Database.Snapshot.Destination,
 	}
 
-	d.timer.Start(
-		func() error {
-			dest := buildSnapshotDestinationPath(d.config.DestinationPath)
-			if err := d.client.Snapshot(d.config.SnapshotFormat, dest); err != nil {
-				return err
-			}
-			return nil
-		},
-	)
-
-	return nil
-}
-
-func createDirectoryIfNotExists(path string) error {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return os.MkdirAll(path, os.ModePerm)
+	if d.isSnapshotConfigured() {
+		snapshotManager, err := NewSnapshotManager(d.client, snapshotOptions)
+		if err != nil {
+			return ErrSnapshotManagerFailed.wrap(*err.rootErr)
+		}
+		services := &Services{snapshotManager: snapshotManager}
+		services.snapshotManager.take()
+		return nil
+	} else {
+		return nil
 	}
-	return nil
 }
 
-func buildSnapshotDestinationPath(destination string) string {
-	timestamp := time.Now().Unix()
-	return fmt.Sprintf("%s/%d", destination, timestamp)
+func (d *Duckron) isSnapshotConfigured() bool {
+	return d.config.Database.Snapshot != SnapshotConfig{}
 }

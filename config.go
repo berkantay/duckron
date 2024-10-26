@@ -3,10 +3,25 @@ package duckron
 import "github.com/spf13/viper"
 
 type config struct {
-	Path            string
-	Interval        int
-	DestinationPath string
-	SnapshotFormat  string
+	Database DatabaseConfig `yaml:"database"`
+}
+
+type DatabaseConfig struct {
+	Type      string          `yaml:"type"`
+	Path      string          `yaml:"path"`
+	Snapshot  SnapshotConfig  `yaml:"snapshot"`
+	Retention RetentionConfig `yaml:"retention"`
+}
+
+type SnapshotConfig struct {
+	Interval    int    `yaml:"interval"`
+	Destination string `yaml:"destination"`
+	Format      string `yaml:"format"`
+}
+
+type RetentionConfig struct {
+	Interval int    `yaml:"interval"`
+	Unit     string `yaml:"unit"`
 }
 
 type ConfigReader struct {

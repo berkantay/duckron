@@ -23,7 +23,7 @@ func NewTimer(interval int) *Timer {
 	return timer
 }
 
-func (t *Timer) Start(task func() error) {
+func (t *Timer) Start(task func() *Error) {
 	for {
 		select {
 		case <-t.ticker.C:
