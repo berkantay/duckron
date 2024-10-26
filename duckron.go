@@ -35,8 +35,7 @@ func (d *Duckron) Start() *Error {
 			return ErrSnapshotManagerFailed.wrap(*err.rootErr)
 		}
 		services := &Services{snapshotManager: snapshotManager}
-		services.snapshotManager.take()
-		return nil
+		return services.snapshotManager.take()
 	} else {
 		return nil
 	}
