@@ -70,9 +70,6 @@
 
 <!-- ABOUT THE PROJECT -->
 
-![Example Image](images/example.png)
-![Example GIF](images/example.gif)
-
 ## About The Project
 
 Originally created to streamline the management of local DuckDB databases, this project offers a powerful, easy-to-use toolset for handling database backups, setting retention policies, and monitoring database health metrics, such as file size and integrity. What started as a focused utility for DuckDB quickly expanded to support broader database management needs on local systems.
@@ -85,14 +82,7 @@ With an emphasis on automation and simplicity, this tool is ideal for developers
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
-- [![Go][Next.js]][Next-url]
-- [![React][React.js]][React-url]
-- [![Vue][Vue.js]][Vue-url]
-- [![Angular][Angular.io]][Angular-url]
-- [![Svelte][Svelte.dev]][Svelte-url]
-- [![Laravel][Laravel.com]][Laravel-url]
-- [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-- [![JQuery][JQuery.com]][JQuery-url]
+- [![Go][Golang]][Go-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -169,4 +159,4 @@ Project Link: [https://github.com/berkantay/duckron](https://github.com/berkanta
 [issues-url]: https://https://github.com/berkantay/duckron/issues
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
 [license-url]: https://https://github.com/berkantay/duckron/blob/master/LICENSE.txt
-[Go]: https://img.shields.io/badge/golang-000000?style=for-the-badge&logo=go&logoColor=cyan
+[Go-url]: https://img.shields.io/badge/golang-000000?style=for-the-badge&logo=go&logoColor=cyan
