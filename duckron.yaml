@@ -2,9 +2,8 @@ database:
   type: "duckdb"
   path: "my_database.duckdb"
   snapshot:
-    interval: 10
+    intervalHours: "1m"
     destination: "backups"
     format: "parquet"
   retention:
-    interval: 1
-    unit: "day"
+    intervalHours: "1h"

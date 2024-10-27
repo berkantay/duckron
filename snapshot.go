@@ -2,6 +2,7 @@ package duckron
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 )
@@ -18,9 +19,10 @@ var (
 type snapshotManager struct {
 	client  DatabaseConnection
 	options *snapshotOptions
+	timer   *Timer
 }
 type snapshotOptions struct {
-	interval    int
+	interval    time.Duration
 	format      string
 	destination string
 }
@@ -28,34 +30,38 @@ type snapshotOptions struct {
 func NewSnapshotManager(client DatabaseConnection, options *snapshotOptions) (*snapshotManager, *Error) {
 	if options == nil {
 		options = &snapshotOptions{
-			interval:    60,            // default interval in seconds
-			format:      "parquet",     // default format
-			destination: "./snapshots", // default destination
+			interval:    60,
+			format:      "parquet",
+			destination: "./snapshots",
 		}
 	}
 
 	if err := client.Ping(); err != nil {
 		return nil, ErrConnectionFailed.wrap(err)
 	}
+	timer := NewTimer(options.interval)
 
-	return &snapshotManager{client: client, options: options}, nil
+	return &snapshotManager{client: client, options: options, timer: timer}, nil
 }
 
-func (sm *snapshotManager) take() *Error {
+func (sm *snapshotManager) take(errChan chan *Error) *Error {
 	if err := createDirectoryIfNotExists(sm.options.destination); err != nil {
 		return ErrFolderCreationFailed.wrap(err)
 	}
 
-	timer := NewTimer(sm.options.interval)
-	timer.Start(
-		func() *Error {
-			dest := buildSnapshotDestinationPath(sm.options.destination)
-			if err := sm.client.Snapshot(sm.options.format, dest); err != nil {
-				return ErrSnapshotFailed.wrap(err)
-			}
-			return nil
-		},
-	)
+	go func(errChan chan *Error) {
+		sm.timer.Start(
+			func() *Error {
+				log.Println("Taking snapshot")
+				dest := buildSnapshotDestinationPath(sm.options.destination)
+				if err := sm.client.Snapshot(sm.options.format, dest); err != nil {
+					errChan <- ErrSnapshotFailed.wrap(err)
+					return ErrSnapshotFailed.wrap(err)
+				}
+				return nil
+			},
+		)
+	}(errChan)
 
 	return nil
 }

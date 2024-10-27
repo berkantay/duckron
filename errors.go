@@ -18,14 +18,6 @@ func (e *Error) wrap(err error) *Error {
 	return e
 }
 
-func (e *Error) error() string {
-	return e.message
-}
-
 func (e *Error) unwrap() *error {
 	return e.rootErr
-}
-
-func (e *Error) from() string {
-	return e.operation
 }

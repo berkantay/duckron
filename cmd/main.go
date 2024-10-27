@@ -19,6 +19,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("Config loaded", config.Database.Snapshot)
+	log.Println("Config loaded", config.Database.Retention)
 
 	duckron, err := duckron.NewDuckron(config)
 	if err != nil {

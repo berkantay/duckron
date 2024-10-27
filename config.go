@@ -14,14 +14,13 @@ type DatabaseConfig struct {
 }
 
 type SnapshotConfig struct {
-	Interval    int    `yaml:"interval"`
-	Destination string `yaml:"destination"`
-	Format      string `yaml:"format"`
+	IntervalHours string `yaml:"intervalHours"`
+	Destination   string `yaml:"destination"`
+	Format        string `yaml:"format"`
 }
 
 type RetentionConfig struct {
-	Interval int    `yaml:"interval"`
-	Unit     string `yaml:"unit"`
+	IntervalHours string `yaml:"intervalHours"`
 }
 
 type ConfigReader struct {

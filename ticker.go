@@ -10,9 +10,8 @@ type Timer struct {
 	stop   chan bool
 }
 
-func NewTimer(interval int) *Timer {
-	timeInterval := time.Duration(interval) * time.Second
-	ticker := time.NewTicker(timeInterval)
+func NewTimer(interval time.Duration) *Timer {
+	ticker := time.NewTicker(interval)
 	stop := make(chan bool)
 
 	timer := &Timer{
@@ -23,19 +22,19 @@ func NewTimer(interval int) *Timer {
 	return timer
 }
 
-func (t *Timer) Start(task func() *Error) {
+func (t *Timer) Start(task func() *Error) *Error {
 	for {
 		select {
 		case <-t.ticker.C:
 			err := task()
 			if err != nil {
 				log.Println("Error on timer:", err)
-				return
+				return err
 			}
 		case <-t.stop:
 			log.Println("Timer killed")
 			t.ticker.Stop()
-			return
+			return nil
 		}
 	}
 }

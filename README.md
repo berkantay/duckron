@@ -75,16 +75,12 @@ Originally created to streamline the management of local DuckDB databases, this 
 
 With an emphasis on automation and simplicity, this tool is ideal for developers and data engineers seeking reliable, hassle-free local database maintenance. By centralizing core management functions, it reduces manual overhead, enhances database reliability, and ensures data safety with minimal configuration.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- GETTING STARTED -->
 
 ## Getting Started
 
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 
@@ -94,8 +90,6 @@ Use this space to show useful examples of how a project can be used. Additional 
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ## Roadmap
 
 - [ ] Write retention policy manager
@@ -103,8 +97,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] Implement webhooks
 
 See the [open issues](https://https://github.com/berkantay/duckron/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 
@@ -125,8 +117,6 @@ Don't forget to give the project a star! Thanks again!
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- CONTACT -->
 
 ## Contact
@@ -134,8 +124,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 Berkant Ay - [@berkantay2](https://twitter.com/berkantay2)
 
 Project Link: [https://github.com/berkantay/duckron](https://github.com/berkantay/duckron)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
