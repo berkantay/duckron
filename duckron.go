@@ -1,6 +1,7 @@
 package duckron
 
 import (
+	"fmt"
 	"sync"
 	"time"
 
@@ -15,24 +16,30 @@ var (
 )
 
 type Duckron struct {
-	client   *drivers.DuckDBClient
-	config   *config
-	services *Services
+	client    *drivers.DuckDBClient
+	config    *config
+	services  *Services
+	alertChan chan int
+	errChan   chan *Error
 }
 
 type Services struct {
 	snapshotManager  *snapshotManager
 	retentionManager *retentionManager
+	alertManager     *alertManager
 }
 
 func NewDuckron(config *config) (*Duckron, error) {
+	errChan := make(chan *Error)
+	alertChan := make(chan int)
+
 	client, err := drivers.NewDuckDBClient(config.Database.Path)
 	if err != nil {
 		return nil, err
 	}
 
 	services := &Services{}
-	duckron := &Duckron{client: client, config: config, services: services}
+	duckron := &Duckron{client: client, config: config, services: services, alertChan: alertChan, errChan: errChan}
 
 	if duckron.isSnapshotConfigured() {
 		interval, err := time.ParseDuration(config.Database.Snapshot.IntervalHours)
@@ -68,20 +75,52 @@ func NewDuckron(config *config) (*Duckron, error) {
 		services.retentionManager = retentionManager
 	}
 
+	if duckron.isAlertConfigured() {
+		alertOptions := &alertOptions{
+			ramThreshold:  config.Alerts.Ram.Threshold,
+			cpuThreshold:  config.Alerts.Cpu.Threshold,
+			diskThreshold: config.Alerts.Disk.Threshold,
+		}
+
+		alertManager := NewAlertManager(alertOptions, alertChan, errChan)
+
+		services.alertManager = alertManager
+	}
+
 	return duckron, nil
 }
 
 func (d *Duckron) Start() *Error {
 	var wg sync.WaitGroup
-	errChan := make(chan *Error)
+
+	go func() {
+		for err := range d.errChan {
+			if err != nil {
+				fmt.Println("Error:", err)
+			}
+		}
+	}()
+
+	go func() {
+		for alert := range d.alertChan {
+			switch alert {
+			case CPU_THRESHOLD_EXCEEDED:
+				fmt.Println("CPU threshold exceeded")
+			case RAM_THRESHOLD_EXCEEDED:
+				fmt.Println("RAM threshold exceeded")
+			case DISK_THRESHOLD_EXCEEDED:
+				fmt.Println("Disk threshold exceeded")
+			}
+		}
+	}()
 
 	if d.services != nil {
 		if d.services.snapshotManager != nil {
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
-				if err := d.services.snapshotManager.take(errChan); err != nil {
-					errChan <- err
+				if err := d.services.snapshotManager.take(d.errChan); err != nil {
+					d.errChan <- err
 				}
 			}()
 		}
@@ -90,18 +129,26 @@ func (d *Duckron) Start() *Error {
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
-				if err := d.services.retentionManager.clean(errChan); err != nil {
-					errChan <- err
+				if err := d.services.retentionManager.clean(d.errChan); err != nil {
+					d.errChan <- err
 				}
+			}()
+		}
+
+		if d.services.alertManager != nil {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				d.services.alertManager.monitor()
 			}()
 		}
 	}
 
 	wg.Wait()
-	close(errChan)
+	close(d.errChan)
 
-	if len(errChan) > 0 {
-		return <-errChan
+	if len(d.errChan) > 0 {
+		return <-d.errChan
 	}
 
 	return nil
@@ -113,4 +160,8 @@ func (d *Duckron) isSnapshotConfigured() bool {
 
 func (d *Duckron) isRetentionConfigured() bool {
 	return d.config.Database.Retention != RetentionConfig{}
+}
+
+func (d *Duckron) isAlertConfigured() bool {
+	return d.config.Alerts != AlertsConfig{}
 }

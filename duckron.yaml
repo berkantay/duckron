@@ -6,4 +6,12 @@ database:
     destination: "backups"
     format: "parquet"
   retention:
-    intervalHours: "1h"
+    intervalHours: "5m"
+
+alerts:
+  cpu:
+    threshold: 0.01 # 80%
+  ram:
+    threshold: 0.8 # 80%
+  disk:
+    threshold: 0.8 # 80%

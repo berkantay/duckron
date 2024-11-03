@@ -4,6 +4,7 @@ import "github.com/spf13/viper"
 
 type config struct {
 	Database DatabaseConfig `yaml:"database"`
+	Alerts   AlertsConfig   `yaml:"alerts"`
 }
 
 type DatabaseConfig struct {
@@ -11,6 +12,24 @@ type DatabaseConfig struct {
 	Path      string          `yaml:"path"`
 	Snapshot  SnapshotConfig  `yaml:"snapshot"`
 	Retention RetentionConfig `yaml:"retention"`
+}
+
+type AlertsConfig struct {
+	Ram  Ram  `yaml:"ram"`
+	Cpu  Cpu  `yaml:"cpu"`
+	Disk Disk `yaml:"disk"`
+}
+
+type Ram struct {
+	Threshold float64 `yaml:"threshold"`
+}
+
+type Cpu struct {
+	Threshold float64 `yaml:"threshold"`
+}
+
+type Disk struct {
+	Threshold float64 `yaml:"threshold"`
 }
 
 type SnapshotConfig struct {
