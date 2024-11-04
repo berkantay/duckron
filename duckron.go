@@ -77,9 +77,9 @@ func NewDuckron(config *config) (*Duckron, error) {
 
 	if duckron.isAlertConfigured() {
 		alertOptions := &alertOptions{
-			ramThreshold:  config.Alerts.Ram.Threshold,
-			cpuThreshold:  config.Alerts.Cpu.Threshold,
-			diskThreshold: config.Alerts.Disk.Threshold,
+			ramThreshold:  config.Alerts.Threshold.Ram,
+			cpuThreshold:  config.Alerts.Threshold.Cpu,
+			diskThreshold: config.Alerts.Threshold.Disk,
 		}
 
 		alertManager := NewAlertManager(alertOptions, alertChan, errChan)

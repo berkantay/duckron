@@ -15,21 +15,13 @@ type DatabaseConfig struct {
 }
 
 type AlertsConfig struct {
-	Ram  Ram  `yaml:"ram"`
-	Cpu  Cpu  `yaml:"cpu"`
-	Disk Disk `yaml:"disk"`
+	Threshold Threshold `yaml:"threshold"`
 }
 
-type Ram struct {
-	Threshold float64 `yaml:"threshold"`
-}
-
-type Cpu struct {
-	Threshold float64 `yaml:"threshold"`
-}
-
-type Disk struct {
-	Threshold float64 `yaml:"threshold"`
+type Threshold struct {
+	Ram  float64 `yaml:"ram"`
+	Cpu  float64 `yaml:"cpu"`
+	Disk float64 `yaml:"disk"`
 }
 
 type SnapshotConfig struct {

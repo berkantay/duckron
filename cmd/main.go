@@ -19,18 +19,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Config loaded", config.Database.Snapshot)
-	log.Println("Config loaded", config.Database.Retention)
-	log.Println("Config loaded", config.Alerts.Cpu)
-	log.Println("Config loaded", config.Alerts.Disk)
-	log.Println("Config loaded", config.Alerts.Ram)
 
 	duckron, err := duckron.NewDuckron(config)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("Duckron started with", config)
 
 	go func() {
 		err := duckron.Start()
